@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汉说 · Luyện nói tiếng Trung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8f3ef; --panel:#ffffff; --panel-2:#f3f8f3; --ink:#2a302c; --muted:#728178;
+  --line:#dde9e1; --line-strong:#c4ddcf; --jade:#5d9150; --jade-soft:#e3f0dd;
+  --amber:#d98b2a; --amber-soft:#fbeccf; --rose:#e0592a; --rose-soft:#fbe2d4;
+  --sidebar:#264a43; --sidebar-ink:#e8f0ea; --sidebar-muted:#8fa89d; --sidebar-line:#345a52;
+  --radius:12px; --shadow:0 1px 2px rgba(40,35,30,.06),0 8px 24px rgba(40,35,30,.06);
+  --ui:"Quicksand",system-ui,"Segoe UI",sans-serif;
+  --kai:"KaiTi","Kaiti SC","STKaiti",Kai,"楷体",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--ui);background:var(--bg);color:var(--ink);font-size:15px;overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+
+.shell{display:flex;flex-direction:column;height:100vh}
+
+/* top bar */
+.topbar{display:flex;align-items:center;gap:9px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line);position:relative;z-index:30}
+.iconbtn{width:36px;height:36px;border:1px solid var(--line-strong);background:var(--panel);border-radius:9px;font-size:16px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);flex:0 0 auto}
+.iconbtn:hover{border-color:var(--jade);color:var(--jade)}
+.iconbtn:disabled{opacity:.35;cursor:default;border-color:var(--line)}
+.brandmini{font-family:var(--kai);font-size:19px;font-weight:700;letter-spacing:1px;color:var(--jade);flex:0 0 auto}
+.topsearch{position:relative;flex:0 0 260px;max-width:32vw}
+.topsearch input{width:100%;border:1px solid var(--line-strong);border-radius:9px;padding:8px 11px;font-size:13px;outline:none;background:var(--panel-2)}
+.topsearch input:focus{border-color:var(--jade);background:#fff}
+.spanel{position:absolute;top:42px;left:0;right:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:60vh;overflow:auto;display:none;z-index:40;padding:6px}
+.spanel.show{display:block}
+.rgroup{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:9px 8px 4px}
+.ritem{display:flex;gap:9px;align-items:flex-start;padding:8px 9px;border-radius:8px;cursor:pointer}
+.ritem:hover{background:var(--panel-2)}
+.ritem .ri-ic{flex:0 0 18px;text-align:center}
+.ritem .ri-t{font-size:13.5px}.ritem .ri-s{font-size:11px;color:var(--muted);margin-top:1px}
+.ritem .han-r{font-family:var(--kai);font-weight:700;color:var(--jade)}
+.crumb{font-size:12px;color:var(--muted);flex:1;min-width:60px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crumb b{color:var(--ink);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:9px;overflow:hidden;flex:0 0 auto}
+.seg button{background:var(--panel);border:none;padding:6px 11px;font-size:12.5px;color:var(--muted)}
+.seg button.on{background:var(--jade);color:#fff}
+.stepper{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line-strong);border-radius:9px;padding:2px;flex:0 0 auto}
+.stepper button{border:none;background:transparent;width:24px;height:26px;border-radius:6px;font-size:13px;color:var(--ink)}
+.stepper button:hover{background:var(--panel-2)}
+.stepper span{font-size:11px;color:var(--muted);padding:0 2px}
+.btn{border:1px solid var(--line-strong);background:var(--panel);border-radius:9px;padding:7px 11px;font-size:12.5px;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--jade);color:var(--jade)}
+.btn.primary{background:var(--jade);border-color:var(--jade);color:#fff}.btn.primary:hover{background:#27695a}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.danger:hover{border-color:var(--rose);color:var(--rose)}
+
+/* ribbon (sticky shared toolbar) */
+.ribbon{display:flex;align-items:center;gap:3px;padding:6px 12px;background:var(--panel-2);border-bottom:1px solid var(--line);flex-wrap:wrap;position:relative;z-index:25}
+.rbtn{min-width:30px;height:30px;border:1px solid transparent;background:transparent;border-radius:7px;font-size:14px;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;padding:0 6px;position:relative}
+.rbtn:hover{background:#eee7d8}
+.rbtn b{font-weight:800}.rbtn i{font-style:italic}.rbtn u{text-decoration:underline}.rbtn s{text-decoration:line-through}
+.rsep{width:1px;height:20px;background:var(--line-strong);margin:0 5px}
+.rsel{border:1px solid var(--line-strong);border-radius:7px;padding:5px 7px;background:var(--panel);font-size:12px;color:var(--ink);height:30px}
+.caret:after{content:"▾";font-size:8px;margin-left:3px;color:var(--muted)}
+.ribbon .hint{font-size:11px;color:var(--muted);margin-left:auto}
+
+/* color palette popover */
+.pop{position:fixed;z-index:70;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:9px;display:none}
+.pop.show{display:block}
+.grid{display:grid;grid-template-columns:repeat(10,18px);gap:5px}
+.grid span{width:18px;height:18px;border-radius:4px;border:1px solid rgba(0,0,0,.12);cursor:pointer}
+.grid span:hover{transform:scale(1.18)}
+.pop .pr{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12px;color:var(--muted)}
+.pop .pr input[type=color]{width:30px;height:26px;border:none;background:none;padding:0}
+.pop .none{font-size:11.5px;border:1px solid var(--line-strong);border-radius:7px;padding:4px 8px;background:var(--panel)}
+
+/* work area: two columns */
+.work{flex:1;display:flex;gap:16px;padding:16px;overflow:hidden;min-height:0}
+.col{overflow:auto;min-height:0;display:flex;flex-direction:column;gap:16px}
+.col-left{flex:1}
+.card-sheet{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.passage-head{padding:18px 22px 0}
+.ptitle{font-family:var(--kai);font-size:26px;font-weight:700;line-height:1.25;border:none;width:100%;background:transparent;color:var(--ink);outline:none}
+.ptitle::placeholder{color:#c3bbac}
+.pmeta{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;gap:12px;flex-wrap:wrap}
+.body{font-family:var(--kai);font-size:21px;line-height:2;color:#211e1a;outline:none;min-height:140px;letter-spacing:.3px;padding:14px 22px 22px}
+.body.font-quick{font-family:var(--ui)}
+.bodywrap{display:flex;align-items:stretch}
+.bcol{flex:1;min-width:0}
+.bcol-vi{display:none;background:var(--panel-2)}
+.bodywrap.split .bcol-cn{border-right:1px solid var(--line)}
+.bodywrap.split .bcol-vi{display:block}
+.blabel{display:none;font-size:11px;font-weight:700;letter-spacing:.5px;padding:10px 22px 0;color:var(--muted)}
+.bodywrap.split .blabel{display:block}
+.blabel.vi{color:var(--jade)}
+.viet{font-family:var(--ui);font-size:16px;line-height:1.75;color:#2a302c;outline:none;min-height:140px;padding:8px 22px 22px}
+.viet:empty:before{content:attr(data-ph);color:#b7afa1;font-size:14px}
+@media(max-width:980px){.bodywrap.split{flex-direction:column}.bodywrap.split .bcol-cn{border-right:none;border-bottom:1px solid var(--line)}}
+.body:empty:before{content:attr(data-ph);color:#c3bbac;font-family:var(--ui);font-size:15px}
+.editable img,.rich img,.body img{max-width:100%;border-radius:6px;margin:4px 0}
+.editable table,.rich table,.body table{border-collapse:collapse;margin:6px 0}
+.editable td,.editable th,.rich td,.rich th,.body td,.body th{border:1px solid var(--line-strong);padding:4px 8px}
+.vw{border-radius:3px;padding:0 1px;cursor:pointer;font-weight:700}
+.vw:hover{filter:brightness(.93)}
+.note-mark{border-bottom:2px dotted var(--amber);cursor:pointer;background:rgba(192,138,45,.08)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,125,107,.5)}100%{box-shadow:0 0 0 12px rgba(47,125,107,0)}}
+.pulse{animation:pulse 1s ease-out}
+
+.pb-head{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600}
+.pb-head .em{font-size:15px}
+.pb-body{padding:14px 16px}
+.kp{width:100%;min-height:70px;font-family:var(--kai);font-size:16px;line-height:1.7;outline:none}
+.kp:empty:before{content:attr(data-ph);color:#c3bbac;font-family:var(--ui);font-size:14px}
+.reps{display:flex;gap:9px;flex-wrap:wrap}
+.rep{display:flex;flex-direction:column;align-items:center;gap:4px;width:62px}
+.rep .dot{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--line-strong);background:var(--panel-2);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);font-size:14px;cursor:pointer}
+.rep .dot:hover{border-color:var(--jade)}
+.rep.done .dot{background:var(--jade);border-color:var(--jade);color:#fff}
+.rep .lab{font-size:10px;color:var(--muted)}.rep.done .lab{color:var(--jade);font-weight:600}
+.rep .dt{font-size:9.5px;border:1px solid var(--line);border-radius:6px;padding:2px;width:100%;color:var(--ink);background:var(--panel);display:none}
+.rep.done .dt{display:block}
+.repfree{margin-top:12px;width:100%;border:1px solid var(--line);border-radius:8px;padding:9px;resize:vertical;min-height:50px;font-size:13.5px;outline:none}
+
+.placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);text-align:center;gap:12px;padding:30px}
+.placeholder .big{font-family:var(--kai);font-size:64px;color:var(--line-strong)}
+
+/* drawers */
+.drawer{position:fixed;top:0;bottom:0;z-index:55;display:flex;flex-direction:column;transition:transform .26s cubic-bezier(.4,0,.2,1)}
+.drawer.left{left:0;width:320px;background:var(--sidebar);color:var(--sidebar-ink);transform:translateX(-104%)}
+.drawer.right{right:0;width:440px;max-width:94vw;background:var(--panel);border-left:1px solid var(--line);transform:translateX(104%)}
+.drawer.open{transform:none;box-shadow:0 0 40px rgba(0,0,0,.25)}
+.dscrim{position:fixed;inset:0;background:rgba(30,26,22,.4);z-index:50;opacity:0;pointer-events:none;transition:opacity .26s}
+.dscrim.show{opacity:1;pointer-events:auto}
+.brand{padding:15px 16px 11px;border-bottom:1px solid var(--sidebar-line);display:flex;align-items:center;gap:10px}
+.brand .logo{font-family:var(--kai);font-size:22px;font-weight:700;letter-spacing:2px}
+.brand .closex{margin-left:auto;border:none;background:none;color:var(--sidebar-muted);font-size:20px}
+.tree-tools{display:flex;gap:6px;padding:10px 12px 8px;flex-wrap:wrap}
+.tt-btn{background:#39332c;color:var(--sidebar-ink);border:1px solid var(--sidebar-line);border-radius:8px;padding:6px 9px;font-size:12px}
+.tt-btn:hover{background:#464037}
+.tree{flex:1;overflow:auto;padding:2px 6px 14px}
+.tree-empty{color:var(--sidebar-muted);font-size:12.5px;padding:14px}
+.node{user-select:none}
+.row{display:flex;align-items:center;gap:4px;padding:5px 6px;border-radius:8px;cursor:pointer}
+.row:hover{background:#37312a}.row.active{background:var(--jade);color:#fff}
+.row.drop-into{outline:2px dashed var(--jade-soft);outline-offset:-2px}
+.twist{width:16px;text-align:center;color:var(--sidebar-muted);flex:0 0 16px;font-size:10px}
+.row.active .twist{color:#dceee8}
+.ic{flex:0 0 18px;text-align:center;font-size:14px}
+.label{flex:1;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.count{font-size:10.5px;color:var(--sidebar-muted);background:#39332c;border-radius:20px;padding:1px 7px}
+.row.active .count{color:#dceee8;background:rgba(255,255,255,.18)}
+.rowacts{display:none;gap:2px}.row:hover .rowacts{display:flex}
+.mini{background:transparent;border:none;color:var(--sidebar-muted);font-size:13px;padding:2px 4px;border-radius:6px}
+.mini:hover{background:rgba(255,255,255,.14);color:#fff}
+.children{margin-left:14px;border-left:1px solid var(--sidebar-line);padding-left:4px}
+.drawer-foot{border-top:1px solid var(--sidebar-line);padding:10px 12px}
+.fstat{font-size:11px;color:var(--sidebar-muted);margin-bottom:7px;line-height:1.4}.fstat b{color:#9fe0cf}
+.foot-btns{display:flex;gap:6px;flex-wrap:wrap}
+.foot-btns button{flex:1;min-width:62px;background:#39332c;color:var(--sidebar-ink);border:1px solid var(--sidebar-line);border-radius:8px;padding:7px 6px;font-size:11.5px}
+.foot-btns button:hover{background:#464037}
+.reconnect{width:100%;margin-top:7px;background:var(--jade);border:none;color:#fff;border-radius:8px;padding:8px;font-size:12px}
+
+/* right drawer (vocab + notes) */
+.vtabs{display:flex;border-bottom:1px solid var(--line)}
+.vtab{flex:1;padding:13px;border:none;background:var(--panel);font-size:13.5px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent}
+.vtab.on{color:var(--jade);border-bottom-color:var(--jade)}
+.vtop{display:flex;align-items:center;gap:8px;padding:10px 16px}
+.vtop input{flex:1;border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-size:13px;outline:none}
+.vtop input:focus{border-color:var(--jade)}
+.vtop .closex{border:none;background:none;font-size:20px;color:var(--muted)}
+.vlist{flex:1;overflow:auto;padding:8px 16px 24px}
+.vempty{color:var(--muted);font-size:12.5px;text-align:center;padding:24px 10px;line-height:1.6}
+.card{border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:11px;background:var(--panel-2)}
+.card .top{display:flex;align-items:center;gap:8px}
+.card .cdot{width:12px;height:12px;border-radius:4px;border:1px solid var(--line-strong);flex:0 0 auto}
+.card .han{font-family:var(--kai);font-size:23px;font-weight:700;color:var(--jade)}
+.card .py{font-size:12.5px;color:var(--amber);font-style:italic}
+.card .pos{font-size:11px;color:var(--muted);margin-left:auto;border:1px solid var(--line-strong);border-radius:20px;padding:1px 8px}
+.card .vn{font-size:14px;margin-top:5px;line-height:1.5}
+.card .fields{margin-top:7px;display:none;font-size:12.5px;color:#46413a;line-height:1.55}
+.card.open .fields{display:block}
+.card .fld{margin-top:7px}.card .fld .k{color:var(--jade);font-weight:600;font-size:11.5px;display:block;margin-bottom:2px}
+.card .acts{display:flex;gap:4px;margin-top:9px}
+.card .acts button{font-size:11px;border:1px solid var(--line-strong);background:var(--panel);border-radius:7px;padding:3px 8px;color:var(--muted)}
+.card .acts button:hover{border-color:var(--jade);color:var(--jade)}
+.notecard{border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:11px 13px;margin-bottom:11px;background:var(--panel-2)}
+.notecard .q{font-family:var(--kai);font-size:15px;color:var(--amber);margin-bottom:6px}
+.notecard .q .x{float:right;border:none;background:none;color:var(--muted);font-size:14px}
+.notecard .ed{min-height:60px;font-size:14px;line-height:1.55;outline:none;border:1px dashed transparent;border-radius:7px;padding:4px}
+.notecard .ed:focus{border-color:var(--line-strong);background:#fff}
+.notecard .ed:empty:before{content:"Viết ghi chú… (dán ảnh/bảng được)";color:#b7afa1}
+
+/* right-click mini toolbar */
+.ctx{position:fixed;z-index:75;background:var(--sidebar);color:#fff;border-radius:11px;padding:5px;display:none;gap:2px;box-shadow:0 8px 26px rgba(0,0,0,.3);align-items:center}
+.ctx button{background:transparent;border:none;color:#fff;font-size:13px;padding:6px 9px;border-radius:8px;display:inline-flex;align-items:center;gap:5px}
+.ctx button:hover{background:rgba(255,255,255,.16)}
+.ctx .sw{width:18px;height:18px;border-radius:5px;border:1px solid rgba(255,255,255,.3);padding:0}
+.ctx .sep{width:1px;height:18px;background:rgba(255,255,255,.25)}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(30,26,22,.45);display:none;align-items:flex-start;justify-content:center;z-index:80;padding:30px 16px;overflow:auto}
+.scrim.show{display:flex}
+.modal{background:var(--panel);border-radius:16px;width:560px;max-width:100%;box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden}
+.m-head{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.m-head h3{margin:0;font-size:16px;flex:1}.m-head .x{border:none;background:transparent;font-size:20px;color:var(--muted)}
+.m-body{padding:18px 20px;max-height:62vh;overflow:auto}
+.m-foot{padding:13px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:9px;background:var(--panel-2)}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:#46413a}
+.field label .num{color:var(--jade)}.field .req{color:var(--rose)}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line-strong);border-radius:9px;padding:9px 11px;font-size:14px;outline:none;background:var(--panel)}
+.field input:focus,.field textarea:focus{border-color:var(--jade)}
+.field .han-in{font-family:var(--kai);font-size:20px;font-weight:700}
+.rich{width:100%;border:1px solid var(--line-strong);border-radius:9px;padding:9px 11px;font-size:14px;line-height:1.55;outline:none;min-height:42px;background:var(--panel)}
+.rich:focus{border-color:var(--jade)}
+.rich:empty:before{content:attr(data-ph);color:#b7afa1}
+.rich ul,.rich ol{margin:3px 0 3px 20px;padding:0}
+.qedit{border:1px solid var(--line);border-radius:11px;padding:13px;margin-bottom:12px;background:var(--panel-2)}
+.qedit .qe-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.qedit .qe-head .numin{width:64px;border:1px solid var(--line-strong);border-radius:7px;padding:4px 7px;font-size:13px}
+.qedit .qe-head .x{margin-left:auto;border:none;background:transparent;color:var(--rose);font-size:16px}
+.colorpick{display:flex;gap:6px;align-items:center}
+.colorpick .sw{width:22px;height:22px;border-radius:6px;border:1px solid var(--line-strong);cursor:pointer}
+.colorpick .sw.sel{outline:2px solid var(--jade);outline-offset:1px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--sidebar);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:95;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;max-width:80vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#d8cfbf;border-radius:8px;border:2px solid var(--bg)}
+.drawer.left ::-webkit-scrollbar-thumb{background:#4a4339}
+@media(max-width:1000px){.work{flex-direction:column;overflow:auto}.col{overflow:visible}}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="topbar">
+    <button class="iconbtn" id="menuBtn" title="Danh sách bài">☰</button>
+    <span class="brandmini">汉说</span>
+    <div class="topsearch"><input id="topSearch" placeholder="🔎 Tìm bài, từ vựng, chủ đề…"><div class="spanel" id="spanel"></div></div>
+    <button class="iconbtn" id="prevP" title="Bài trước">◀</button>
+    <button class="iconbtn" id="nextP" title="Bài sau">▶</button>
+    <div class="crumb" id="crumb">Chưa mở bài</div>
+    <div class="stepper"><span>Cỡ</span><button id="fsDown">−</button><button id="fsUp">+</button></div>
+    <button class="btn" id="vietToggle">🇬🇧 EN</button>
+    <button class="iconbtn" id="vocabBtn" title="Thẻ từ / Ghi chú">🔖</button>
+  </div>
+
+  <!-- shared Word-like ribbon (sticky) -->
+  <div class="ribbon" id="ribbon">
+    <select class="rsel" id="fontPick" title="Kiểu chữ">
+      <option value="">Kiểu chữ…</option>
+      <option value="KaiTi,'Kaiti SC',STKaiti,楷体,serif">楷体 Kaiti</option>
+      <option value="Quicksand,sans-serif">Quicksand</option>
+      <option value="SimSun,宋体,serif">宋体 SimSun</option>
+      <option value="'Microsoft YaHei',黑体,sans-serif">黑体 YaHei</option>
+    </select>
+    <span class="rsep"></span>
+    <button class="rbtn" data-cmd="undo" title="Hoàn tác">↶</button>
+    <button class="rbtn" data-cmd="redo" title="Làm lại">↷</button>
+    <span class="rsep"></span>
+    <button class="rbtn" data-cmd="bold" title="Đậm"><b>B</b></button>
+    <button class="rbtn" data-cmd="italic" title="Nghiêng"><i>I</i></button>
+    <button class="rbtn" data-cmd="underline" title="Gạch chân"><u>U</u></button>
+    <button class="rbtn" data-cmd="strikeThrough" title="Gạch ngang"><s>S</s></button>
+    <span class="rsep"></span>
+    <button class="rbtn caret" id="hlBtn" title="Màu nền (highlight)">🖍</button>
+    <button class="rbtn caret" id="fcBtn" title="Màu chữ"><span style="border-bottom:3px solid #c0392b;padding-bottom:1px">A</span></button>
+    <button class="rbtn caret" id="lhBtn" title="Giãn dòng">↕</button>
+    <span class="rsep"></span>
+    <button class="rbtn" data-size="down" title="Chữ nhỏ">A⁻</button>
+    <button class="rbtn" data-size="up" title="Chữ to">A⁺</button>
+    <span class="rsep"></span>
+    <button class="rbtn" data-cmd="insertUnorderedList" title="Bullet">•</button>
+    <button class="rbtn" data-cmd="insertOrderedList" title="Numbering">1.</button>
+    <span class="rsep"></span>
+    <button class="rbtn" id="imgBtn" title="Chèn ảnh">🖼</button>
+    <input type="file" id="imgFile" accept="image/*" hidden>
+    <button class="rbtn" id="tblBtn" title="Chèn bảng">▦</button>
+    <span class="hint">Thanh chung · chọn chữ rồi bấm · chuột phải để hiện nhanh</span>
+  </div>
+
+  <div class="work" id="work">
+    <div id="emptyState" class="placeholder">
+      <div class="big">说</div>
+      <div style="font-size:16px;color:var(--ink)">Chưa mở bài nào</div>
+      <div style="max-width:360px;line-height:1.6">Bấm <b>☰</b> để mở danh sách bài, hoặc tạo bài mới. Dùng <b>◀ ▶</b> để chuyển nhanh giữa các bài cùng bộ đề.</div>
+      <button class="btn primary" id="openListBtn">☰ Mở danh sách bài</button>
+    </div>
+
+    <div class="col col-left" id="colLeft" style="display:none">
+      <div class="card-sheet">
+        <div class="passage-head"><input class="ptitle" id="ptitle" placeholder="Tiêu đề bài…"><div class="pmeta" id="pmeta"></div></div>
+        <div class="bodywrap" id="bodywrap">
+          <div class="bcol bcol-cn">
+            <div class="blabel cn">中文</div>
+            <div class="body editable" id="body" contenteditable="true" data-ph="Dán hoặc gõ nội dung luyện nói tiếng Trung ở đây… (dán được cả ảnh và bảng, hoặc dùng nút 🖼/▦ trên thanh công cụ)"></div>
+          </div>
+          <div class="bcol bcol-vi">
+            <div class="blabel vi">🇬🇧 English translation — luyện dịch</div>
+            <div class="viet editable" id="viet" contenteditable="true" data-ph="Type/paste the English translation here to read & translate side by side…"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-sheet"><div class="pb-head"><span class="em">⭐</span> Ý hay / điểm cần nhớ</div>
+        <div class="pb-body"><div class="kp editable" id="keypoints" contenteditable="true" data-ph="Ghi nhanh ý hay, cấu trúc, từ đắt… (dán ảnh/bảng được)"></div></div></div>
+      <div class="card-sheet"><div class="pb-head"><span class="em">🔁</span> Số lần ôn — chạm số để đánh dấu &amp; chọn ngày</div>
+        <div class="pb-body"><div class="reps" id="reps"></div>
+          <textarea class="repfree" id="repfree" placeholder="Lần 10 trở đi · tự ghi ngày ôn / cảm nhận…"></textarea></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LEFT DRAWER -->
+<aside class="drawer left" id="leftDrawer">
+  <div class="brand"><span class="logo">汉说</span><div><div style="font-size:13px;font-weight:600">Hán nói</div><div style="font-size:11px;color:var(--sidebar-muted)">Luyện nói tiếng Trung</div></div><button class="closex" data-closedrawer>×</button></div>
+  <div class="tree-tools"><button class="tt-btn" id="addRoot">📁 Thư mục gốc</button><button class="tt-btn" id="expandAll">⇕ Mở/đóng</button></div>
+  <div class="tree" id="tree"></div>
+  <div class="drawer-foot">
+    <div class="fstat" id="fstat">Lưu dữ liệu: <b>bộ nhớ trình duyệt</b></div>
+    <div class="foot-btns"><button id="connectFile">🔗 Kết nối file</button><button id="openFile">📂 Mở file</button><button id="exportBtn">⬇︎ Xuất</button><button id="importBtn">⬆︎ Nhập</button></div>
+    <button class="reconnect" id="reconnectPill" style="display:none">↻ Kết nối lại file dữ liệu</button>
+    <input type="file" id="importFile" accept="application/json" hidden>
+  </div>
+</aside>
+
+<!-- RIGHT DRAWER -->
+<aside class="drawer right" id="rightDrawer">
+  <div class="vtabs"><button class="vtab on" data-tab="vocab">🔖 Thẻ từ</button><button class="vtab" data-tab="notes">📝 Ghi chú</button></div>
+  <div class="vtop"><input id="vsearch" placeholder="Tìm trong bài này…"><button class="btn ghost" id="addVocab" style="padding:5px 8px" title="Thêm thẻ trống">＋</button><button class="closex" data-closedrawer>×</button></div>
+  <div class="vlist" id="vlist"></div>
+</aside>
+
+<div class="dscrim" id="dscrim"></div>
+
+<!-- right-click mini toolbar -->
+<div class="ctx" id="ctx">
+  <button data-cmd="bold"><b>B</b></button><button data-cmd="italic"><i>I</i></button><button data-cmd="underline"><u>U</u></button>
+  <span class="sep"></span>
+  <button class="sw" id="ctxHl" title="Màu nền"></button>
+  <button id="ctxFc" title="Màu chữ"><span style="border-bottom:3px solid #ff6b6b;padding-bottom:1px">A</span></button>
+  <span class="sep"></span>
+  <button id="ctxVocab">🔖 Lưu thẻ</button><button id="ctxNote">📝 Ghi chú</button>
+</div>
+
+<!-- color palette popover -->
+<div class="pop" id="pop"><div class="grid" id="popGrid"></div><div class="pr"><span>Tùy chọn:</span><input type="color" id="popCustom"><button class="none" id="popNone">Xóa nền</button></div></div>
+
+<div class="scrim" id="scrim"><div id="modalHost"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const KEY="han_speaking";
+const OLD_KEYS=["han_speaking"];
+let DB={tree:[],sel:null,settings:{}};
+let expanded=new Set();
+const $=id=>document.getElementById(id);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const REPS=[1,3,7,14,21,30,60,80,180];
+const HLS=["#fff1a8","#c7eccf","#ffd3e0","#cfe3ff"];
+let lastHl="#fff1a8";
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function stripTags(s){return String(s||"").replace(/<[^>]+>/g," ").replace(/&[a-z]+;/g," ");}
+const PALETTE=["#000000","#434343","#666666","#999999","#b7b7b7","#cccccc","#d9d9d9","#efefef","#f6f6f6","#ffffff","#980000","#ff0000","#ff9900","#ffd966","#ffff00","#00ff00","#00ffff","#4a86e8","#9900ff","#ff00ff","#e6b8af","#f4cccc","#fce5cd","#fff2cc","#fff1a8","#d9ead3","#c7eccf","#cfe3ff","#d9d2e9","#ffd3e0","#dd7e6b","#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#a4c2f4","#9fc5e8","#b4a7d6","#d5a6bd","#cc4125","#e06666","#f6b26b","#93c47d","#76a5af","#6d9eeb","#6fa8dc","#8e7cc3","#c27ba0","#5b0f00"];
+
+/* ---------- storage ---------- */
+let fileHandle=null;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){if(e&&/quota/i.test(e.name||""))toast("Bộ nhớ trình duyệt đầy (do ảnh dán). Hãy bấm 🔗 Kết nối file để lưu chắc tay.");}scheduleFileWrite();}
+function load(){try{for(const k of OLD_KEYS){const r=localStorage.getItem(k);if(r){DB=JSON.parse(r);if(k!==KEY){try{localStorage.setItem(KEY,r);}catch(e){}}return true;}}}catch(e){}return false;}
+let fwt;function scheduleFileWrite(){if(!fileHandle)return;clearTimeout(fwt);fwt=setTimeout(writeFile,500);}
+async function writeFile(){if(!fileHandle)return;try{const w=await fileHandle.createWritable();await w.write(JSON.stringify(DB,null,2));await w.close();setFileStatus(true);}catch(e){setFileStatus(false,"không ghi được");}}
+function setFileStatus(c,err){const el=$("fstat");el.innerHTML=c?'Lưu dữ liệu: <b>tự ghi vào file ✓</b>':(err?'Lưu file: <b style="color:#e7a">'+esc(err)+'</b>':'Lưu dữ liệu: <b>bộ nhớ trình duyệt</b>');}
+function fsSupported(){return !!window.showSaveFilePicker;}
+async function connectFile(){if(!fsSupported()){toast("Trình duyệt không hỗ trợ kết nối file. Dùng ⬇︎ Xuất / ⬆︎ Nhập.");return;}
+  try{fileHandle=await window.showSaveFilePicker({suggestedName:"han-noi-data.json",types:[{description:"Dữ liệu Hán nói",accept:{"application/json":[".json"]}}]});await writeFile();await storeHandle();toast("Đã kết nối — app tự lưu vào file này");$("reconnectPill").style.display="none";}catch(e){if(e.name!=="AbortError")toast("Không kết nối được (có thể do mở bằng file://)");}}
+async function openDataFile(){if(!window.showOpenFilePicker){toast("Trình duyệt không hỗ trợ. Dùng ⬆︎ Nhập.");return;}
+  try{const[h]=await window.showOpenFilePicker({types:[{description:"JSON",accept:{"application/json":[".json"]}}]});const f=await h.getFile();const d=JSON.parse(await f.text());if(!d.tree)throw 0;DB=d;fileHandle=h;await storeHandle();normalize();expanded=new Set();DB.sel=null;save();rerenderAll();toast("Đã mở file dữ liệu");$("reconnectPill").style.display="none";}catch(e){if(e.name!=="AbortError")toast("Không mở được file");}}
+function idb(){return new Promise((res,rej)=>{try{const r=indexedDB.open("hanreader",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>res(r.result);r.onerror=()=>rej();}catch(e){rej();}});}
+async function storeHandle(){try{const db=await idb();db.transaction("kv","readwrite").objectStore("kv").put(fileHandle,"fh");}catch(e){}}
+async function loadHandle(){try{const db=await idb();return await new Promise(res=>{const rq=db.transaction("kv","readonly").objectStore("kv").get("fh");rq.onsuccess=()=>res(rq.result);rq.onerror=()=>res(null);});}catch(e){return null;}}
+async function reconnect(h){try{const o={mode:"readwrite"};if((await h.queryPermission(o))!=="granted"){if((await h.requestPermission(o))!=="granted"){toast("Chưa cấp quyền");return;}}const f=await h.getFile();const d=JSON.parse(await f.text());if(d.tree){DB=d;normalize();}fileHandle=h;expanded=new Set();if(DB.tree[0])expanded.add(DB.tree[0].id);rerenderAll();setFileStatus(true);$("reconnectPill").style.display="none";toast("Đã kết nối lại file dữ liệu");}catch(e){toast("Không kết nối lại được");}}
+
+/* ---------- tree helpers ---------- */
+function walk(nodes,fn){nodes.forEach(n=>{fn(n);if(n.children)walk(n.children,fn);});}
+function findNode(id,nodes=DB.tree,parent=null){for(const n of nodes){if(n.id===id)return{node:n,parent,siblings:nodes};if(n.children){const r=findNode(id,n.children,n);if(r)return r;}}return null;}
+function findInNode(node,id){let h=false;walk([node],n=>{if(n.id===id)h=true;});return h;}
+function allFolders(nodes=DB.tree,depth=0,out=[]){nodes.forEach(n=>{if(n.type==="folder"){out.push({node:n,depth});allFolders(n.children,depth+1,out);}});return out;}
+function countPassages(node){let c=0;walk([node],n=>{if(n.type==="passage")c++;});return c;}
+function crumbFor(id){const path=[];(function rec(nodes,t){for(const n of nodes){const tt=t.concat(n.name);if(n.id===id){path.push(...tt);return true;}if(n.children&&rec(n.children,tt))return true;}return false;})(DB.tree,[]);return path;}
+function flatPassages(){const out=[];walk(DB.tree,n=>{if(n.type==="passage")out.push(n.id);});return out;}
+
+/* ---------- seed / normalize ---------- */
+function seed(){
+  const sp=()=>({id:uid(),type:"passage",name:"Chủ đề mẫu (饮食)",
+    body:"我们每天需要的主要食物共分五类：谷类、蔬菜和水果、鱼肉蛋、奶类和豆类、油脂类。按照每日摄取量从多到少的顺序，依次为谷类、蔬菜和水果、鱼肉蛋、奶类和豆类、油脂类。<br><br>谷类主要提供碳水化合物、蛋白质等供能物质，是膳食的基础。蔬菜水果中富含维生素和膳食纤维，每天应当大量摄取。",
+    bodyFS:21,bodyLH:2,
+    keypoints:"",reps:{},repfree:"",vocab:[],notes:[]});
+  const de=n=>({id:uid(),type:"folder",name:"Đề "+n,children:[sp()]});
+  const sub=n=>({id:uid(),type:"folder",name:n,children:[de(1),de(2)]});
+  DB.tree=[{id:uid(),type:"folder",name:"HSK",children:[
+    {id:uid(),type:"folder",name:"HSK5",children:[sub("SBT"),sub("HANBAN"),sub("Xanh lá"),sub("Tinh giảng")]},
+    {id:uid(),type:"folder",name:"HSK6",children:[sub("SBT"),sub("HANBAN"),sub("Xanh lá"),sub("Tinh giảng")]}]},
+    {id:uid(),type:"folder",name:"Nguồn ngoài",children:[{id:uid(),type:"folder",name:"Đời sống",children:[]},{id:uid(),type:"folder",name:"Bản tin / Báo chí",children:[]}]}];
+}
+function normalize(){DB.settings=Object.assign({tab:"vocab"},DB.settings||{});
+  walk(DB.tree,n=>{if(n.type==="passage"){n.vocab=n.vocab||[];n.notes=n.notes||[];n.reps=n.reps||{};n.bodyFS=n.bodyFS||21;n.bodyLH=n.bodyLH||2;n.viet=n.viet||"";
+  }});}
+
+/* ---------- TREE ---------- */
+const treeEl=$("tree");
+function renderTree(){if(!DB.tree.length){treeEl.innerHTML='<div class="tree-empty">Chưa có thư mục.</div>';return;}treeEl.innerHTML="";DB.tree.forEach(n=>treeEl.appendChild(nodeEl(n)));}
+function nodeEl(n){const wrap=document.createElement("div");wrap.className="node";const row=document.createElement("div");row.className="row"+(DB.sel===n.id?" active":"");row.draggable=true;
+  const isF=n.type==="folder",open=expanded.has(n.id);
+  row.innerHTML=`<span class="twist">${isF?(open?"▾":"▸"):""}</span><span class="ic">${isF?(open?"📂":"📁"):"📄"}</span><span class="label">${esc(n.name)}</span>${isF?`<span class="count">${countPassages(n)}</span>`:""}<span class="rowacts">${isF?'<button class="mini" data-act="addF" title="Thư mục con">📁</button><button class="mini" data-act="addP" title="Thêm bài">📄</button>':''}<button class="mini" data-act="ren">✎</button><button class="mini" data-act="up">▲</button><button class="mini" data-act="down">▼</button><button class="mini" data-act="move">↪</button><button class="mini" data-act="del">🗑</button></span>`;
+  row.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(a){e.stopPropagation();handleAct(a.dataset.act,n.id);return;}if(isF){open?expanded.delete(n.id):expanded.add(n.id);renderTree();}else{openPassage(n.id);closeDrawer();}});
+  row.addEventListener("dragstart",e=>e.dataTransfer.setData("id",n.id));
+  row.addEventListener("dragover",e=>{if(isF){e.preventDefault();row.classList.add("drop-into");}});
+  row.addEventListener("dragleave",()=>row.classList.remove("drop-into"));
+  row.addEventListener("drop",e=>{e.preventDefault();row.classList.remove("drop-into");const d=e.dataTransfer.getData("id");if(d&&d!==n.id&&isF)moveNode(d,n.id);});
+  wrap.appendChild(row);
+  if(isF&&open&&n.children&&n.children.length){const k=document.createElement("div");k.className="children";n.children.forEach(c=>k.appendChild(nodeEl(c)));wrap.appendChild(k);}
+  return wrap;}
+function handleAct(act,id){const f=findNode(id);if(!f)return;const{node,siblings}=f;
+  if(act==="addF")promptModal("Tên thư mục con","",v=>{node.children.push({id:uid(),type:"folder",name:v,children:[]});expanded.add(node.id);commit();});
+  if(act==="addP")promptModal("Tên bài","Bài mới",v=>{const p={id:uid(),type:"passage",name:v,body:"",bodyFS:21,bodyLH:2,keypoints:"",reps:{},repfree:"",vocab:[],notes:[]};node.children.push(p);expanded.add(node.id);commit();openPassage(p.id);});
+  if(act==="ren")promptModal("Đổi tên",node.name,v=>{node.name=v;commit();if(DB.sel===id)renderReader();});
+  if(act==="del")confirmModal(`Xóa “${node.name}”${node.children&&node.children.length?" và toàn bộ bên trong":""}?`,()=>{siblings.splice(siblings.indexOf(node),1);if(findInNode(node,DB.sel)){DB.sel=null;cur=null;showEmpty();}commit();});
+  if(act==="up"||act==="down"){const i=siblings.indexOf(node),j=act==="up"?i-1:i+1;if(j>=0&&j<siblings.length){siblings.splice(i,1);siblings.splice(j,0,node);commit();}}
+  if(act==="move")moveDialog(id);}
+function moveNode(d,t){const dr=findNode(d),ta=findNode(t);if(!dr||!ta||ta.node.type!=="folder")return;if(findInNode(dr.node,t)){toast("Không thể chuyển vào chính nó");return;}dr.siblings.splice(dr.siblings.indexOf(dr.node),1);ta.node.children.push(dr.node);expanded.add(t);commit();}
+function moveDialog(id){const node=findNode(id).node,fs=allFolders().filter(f=>!findInNode(node,f.node.id));
+  const opts='<option value="__root__">— Thư mục gốc —</option>'+fs.map(f=>`<option value="${f.node.id}">${"&nbsp;".repeat(f.depth*3)}${esc(f.node.name)}</option>`).join("");
+  openModal(`<div class="m-head"><h3>Chuyển “${esc(node.name)}” vào…</h3><button class="x" data-close>×</button></div><div class="m-body"><div class="field"><label>Thư mục đích</label><select id="moveSel">${opts}</select></div></div><div class="m-foot"><button class="btn" data-close>Hủy</button><button class="btn primary" id="moveOk">Chuyển</button></div>`);
+  $("moveOk").onclick=()=>{const v=$("moveSel").value,src=findNode(id);src.siblings.splice(src.siblings.indexOf(src.node),1);if(v==="__root__")DB.tree.push(src.node);else{findNode(v).node.children.push(src.node);expanded.add(v);}closeModal();commit();};}
+function commit(){save();renderTree();}
+
+/* ---------- global search (top) ---------- */
+function runSearch(q){const sp=$("spanel");q=q.trim().toLowerCase();if(!q){sp.classList.remove("show");sp.innerHTML="";return;}
+  const P=[],V=[],F=[];
+  (function rec(nodes,trail){for(const n of nodes){if(n.type==="folder"){if(n.name.toLowerCase().includes(q))F.push({id:n.id,t:n.name,s:trail.join(" › ")});rec(n.children||[],trail.concat(n.name));}else{const bt=stripTags(n.body).toLowerCase();if(n.name.toLowerCase().includes(q)||bt.includes(q))P.push({id:n.id,t:n.name,s:trail.join(" › ")});(n.vocab||[]).forEach(c=>{if((c.han+" "+(c.py||"")+" "+stripTags(c.vn)+" "+stripTags(c.zh)).toLowerCase().includes(q))V.push({id:n.id,vid:c.id,t:c.han,vn:stripTags(c.vn),s:n.name});});}}})(DB.tree,[]);
+  let html="";
+  if(P.length)html+='<div class="rgroup">Bài</div>'+P.slice(0,20).map(r=>`<div class="ritem" data-open="${r.id}"><span class="ri-ic">📄</span><div><div class="ri-t">${esc(r.t)}</div><div class="ri-s">${esc(r.s)}</div></div></div>`).join("");
+  if(V.length)html+='<div class="rgroup">Từ vựng</div>'+V.slice(0,20).map(r=>`<div class="ritem" data-open="${r.id}" data-vid="${r.vid}"><span class="ri-ic">🔖</span><div><div class="ri-t han-r">${esc(r.t)}</div><div class="ri-s">${esc(r.vn||"")} · ${esc(r.s)}</div></div></div>`).join("");
+  if(F.length)html+='<div class="rgroup">Thư mục / chủ đề</div>'+F.slice(0,15).map(r=>`<div class="ritem" data-folder="${r.id}"><span class="ri-ic">📁</span><div><div class="ri-t">${esc(r.t)}</div><div class="ri-s">${esc(r.s)}</div></div></div>`).join("");
+  if(!html)html='<div class="tree-empty" style="color:var(--muted)">Không tìm thấy.</div>';
+  sp.innerHTML=html;sp.classList.add("show");
+  sp.querySelectorAll("[data-open]").forEach(el=>el.onclick=()=>{openPassage(el.dataset.open);closeSearch();if(el.dataset.vid)focusCard(el.dataset.vid);});
+  sp.querySelectorAll("[data-folder]").forEach(el=>el.onclick=()=>{closeSearch();revealFolder(el.dataset.folder);openLeft();});}
+function closeSearch(){$("spanel").classList.remove("show");$("topSearch").value="";}
+function revealFolder(id){(function rec(nodes,chain){for(const n of nodes){const c=chain.concat(n.id);if(n.id===id){c.forEach(x=>expanded.add(x));return true;}if(n.children&&rec(n.children,c))return true;}return false;})(DB.tree,[]);renderTree();}
+$("topSearch").addEventListener("input",e=>runSearch(e.target.value));
+document.addEventListener("mousedown",e=>{if(!$("topsearch")&&!e.target.closest(".topsearch"))$("spanel").classList.remove("show");});
+
+/* ---------- PASSAGE ---------- */
+let cur=null;
+function showEmpty(){$("emptyState").style.display="flex";$("colLeft").style.display="none";$("crumb").textContent="Chưa mở bài";updateNav();renderTree();}
+function openPassage(id){const f=findNode(id);if(!f||f.node.type!=="passage")return;DB.sel=id;cur=f.node;save();$("emptyState").style.display="none";$("colLeft").style.display="flex";renderReader();renderTree();renderRight();$("colLeft").scrollTop=0;updateNav();}
+function updateNav(){const fp=flatPassages();const i=fp.indexOf(DB.sel);$("prevP").disabled=!(i>0);$("nextP").disabled=!(i>=0&&i<fp.length-1);}
+function navP(dir){const fp=flatPassages();let i=fp.indexOf(DB.sel);if(i<0)return;i+=dir;if(i>=0&&i<fp.length)openPassage(fp[i]);}
+$("prevP").onclick=()=>navP(-1);$("nextP").onclick=()=>navP(1);
+function renderReader(){if(!cur)return;const path=crumbFor(cur.id);
+  $("crumb").innerHTML=path.slice(0,-1).map(esc).join(" › ")+(path.length>1?" › ":"")+"<b>"+esc(path[path.length-1])+"</b>";
+  $("ptitle").value=cur.name;const b=$("body");b.innerHTML=cur.body||"";b.style.fontSize=(cur.bodyFS||21)+"px";b.style.lineHeight=cur.bodyLH||2;
+  $("viet").innerHTML=cur.viet||"";applyViet();
+  $("keypoints").innerHTML=cur.keypoints||"";$("repfree").value=cur.repfree||"";renderReps();
+  const done=Object.keys(cur.reps||{}).length;
+  $("pmeta").innerHTML=`📄 ${charCount(cur.body)} chữ &nbsp;•&nbsp; 🔁 ${done}/9 mốc &nbsp;•&nbsp; 🔖 ${(cur.vocab||[]).length} thẻ &nbsp;•&nbsp; 📝 ${(cur.notes||[]).length}`;}
+function charCount(h){return (stripTags(h).match(/[\u4e00-\u9fff]/g)||[]).length;}
+
+/* ---------- right drawer: vocab + notes ---------- */
+function setTab(t){DB.settings.tab=t;document.querySelectorAll(".vtab").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));$("vsearch").style.display=t==="vocab"?"block":"none";$("addVocab").style.display=t==="vocab"?"inline-flex":"none";renderRight();save();}
+document.querySelectorAll(".vtab").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+function renderRight(){if((DB.settings.tab||"vocab")==="vocab")renderVocab();else renderNotes();}
+function renderVocab(){const list=$("vlist");if(!cur){list.innerHTML='<div class="vempty">Mở một bài để xem thẻ từ.</div>';return;}
+  const q=($("vsearch").value||"").trim().toLowerCase();let cards=cur.vocab||[];if(q)cards=cards.filter(c=>(c.han+(c.py||"")+stripTags(c.vn)).toLowerCase().includes(q));
+  if(!cards.length){list.innerHTML='<div class="vempty">Chưa có thẻ từ.<br>Bôi đen một từ rồi bấm chuột phải → <b>🔖 Lưu thẻ</b>.</div>';return;}list.innerHTML="";
+  cards.forEach(c=>{const el=document.createElement("div");el.className="card";el.dataset.vid=c.id;
+    const fld=(k,v)=>v&&stripTags(v).trim()?`<div class="fld"><span class="k">${k}</span><div class="rich" style="border:none;padding:0;min-height:0">${v}</div></div>`:"";
+    el.innerHTML=`<div class="top"><span class="cdot" style="background:${c.hl||"#fff1a8"}"></span><span class="han">${esc(c.han)}</span><span class="py">${esc(c.py||"")}</span>${c.pos?`<span class="pos">${esc(c.pos)}</span>`:""}</div>${c.vn&&stripTags(c.vn).trim()?`<div class="vn rich" style="border:none;padding:0;min-height:0">${c.vn}</div>`:""}<div class="fields">${fld("Tư duy chữ Hán",c.think)}${fld("Nghĩa tiếng Trung",c.zh)}${fld("Cấu trúc cố định",c.struct)}${fld("Cách dùng & ví dụ",c.usage)}${fld("Phân biệt",c.distinguish)}${fld("Mini test",c.test)}</div><div class="acts"><button data-exp>Chi tiết ▾</button><button data-edit>Sửa</button><button data-del>Xóa</button></div>`;
+    el.querySelector("[data-exp]").onclick=()=>el.classList.toggle("open");
+    el.querySelector("[data-edit]").onclick=()=>vocabModal(c);
+    el.querySelector("[data-del]").onclick=()=>{cur.vocab=cur.vocab.filter(x=>x.id!==c.id);unwrap("vw",c.id);save();renderVocab();renderReader();};
+    list.appendChild(el);});}
+function renderNotes(){const list=$("vlist");if(!cur){list.innerHTML='<div class="vempty">Mở một bài.</div>';return;}
+  const ns=cur.notes||[];if(!ns.length){list.innerHTML='<div class="vempty">Chưa có ghi chú.<br>Bôi đen 1 câu/đoạn → chuột phải → <b>📝 Ghi chú</b>.</div>';return;}list.innerHTML="";
+  ns.forEach(n=>{const el=document.createElement("div");el.className="notecard";el.dataset.nid=n.id;
+    el.innerHTML=`<div class="q">「${esc(n.quote)}」<button class="x" title="Xóa">×</button></div><div class="ed editable" contenteditable data-note="${n.id}">${n.html||""}</div>`;
+    el.querySelector(".x").onclick=()=>{cur.notes=cur.notes.filter(x=>x.id!==n.id);unwrap("note-mark",n.id);save();renderNotes();renderReader();};
+    el.querySelector("[data-note]").addEventListener("input",e=>{n.html=e.target.innerHTML;saveDebounced();});
+    list.appendChild(el);});}
+function focusCard(vid){setTab("vocab");openRight();renderVocab();requestAnimationFrame(()=>{const el=document.querySelector(`#vlist .card[data-vid="${vid}"]`);if(el){el.classList.add("open");el.scrollIntoView({block:"center",behavior:"smooth"});el.classList.add("pulse");setTimeout(()=>el.classList.remove("pulse"),1000);}});}
+function focusNote(nid){setTab("notes");openRight();renderNotes();requestAnimationFrame(()=>{const el=document.querySelector(`#vlist .notecard[data-nid="${nid}"]`);if(el){el.scrollIntoView({block:"center",behavior:"smooth"});el.classList.add("pulse");setTimeout(()=>el.classList.remove("pulse"),1000);const ed=el.querySelector("[data-note]");if(ed)ed.focus();}});}
+
+/* vocab modal */
+function vocabModal(card){const c=card?Object.assign({},card):{id:uid(),han:pendingText||"",py:"",pos:"",think:"",vn:"",zh:"",struct:"",usage:"",distinguish:"",test:"",hl:lastHl};
+  const rf=(n,l,k,ph)=>`<div class="field"><label><span class="num">${n}</span> ${l}</label><div class="rich" contenteditable data-k="${k}" data-rich data-ph="${ph}">${c[k]||""}</div></div>`;
+  openModal(`<div class="m-head"><h3>🔖 ${card?"Sửa":"Thêm"} thẻ từ</h3><button class="x" data-close>×</button></div><div class="m-body">
+    <div class="field"><label><span class="num">①</span> Từ (chữ Hán) <span class="req">*</span></label><input class="han-in" data-k="han" value="${esc(c.han)}" placeholder="如：主要"></div>
+    <div class="field"><label><span class="num">②</span> Pinyin</label><input data-k="py" value="${esc(c.py)}" placeholder="zhǔ yào"></div>
+    <div class="field"><label><span class="num">③</span> Từ loại</label><input data-k="pos" value="${esc(c.pos)}" placeholder="Danh từ / Động từ…"></div>
+    <div class="field"><label>Màu đánh dấu từ này trong bài</label><div class="colorpick" id="hlPick">${HLS.map(h=>`<span class="sw ${c.hl===h?"sel":""}" style="background:${h}" data-pick="${h}"></span>`).join("")}</div></div>
+    ${rf("④","Tư duy chữ Hán","think","Chiết tự + hình dung để nhớ…")}${rf("⑤","Nghĩa tiếng Việt","vn","Nghĩa tiếng Việt…")}${rf("⑥","Nghĩa tiếng Trung","zh","Giải thích bằng từ dễ…")}${rf("⑦","Cấu trúc cố định","struct","Collocation hay gặp…")}${rf("⑧","Cách dùng & ví dụ","usage","Công thức + câu ví dụ…")}${rf("⑨","Phân biệt","distinguish","So sánh từ dễ nhầm…")}${rf("⑩","Mini test","test","Câu hỏi tự kiểm tra…")}
+    </div><div class="m-foot"><button class="btn" data-close>Hủy</button><button class="btn primary" id="vSave">Lưu thẻ</button></div>`);
+  let chosen=c.hl||lastHl;$("hlPick").querySelectorAll("[data-pick]").forEach(s=>s.onclick=()=>{chosen=s.dataset.pick;$("hlPick").querySelectorAll("[data-pick]").forEach(x=>x.classList.toggle("sel",x===s));});
+  $("vSave").onclick=()=>{document.querySelectorAll("#scrim [data-k]").forEach(el=>{c[el.dataset.k]=el.hasAttribute("data-rich")?el.innerHTML:el.value.trim();});if(!c.han){toast("Cần nhập chữ Hán");return;}c.hl=chosen;
+    if(!card){cur.vocab.push(c);if(pendingRange&&pendingEditable)wrapSel(pendingRange,"vw",c.id,chosen,pendingEditable);}
+    else{document.querySelectorAll(`.vw[data-vid="${c.id}"]`).forEach(s=>s.style.background=chosen);persistEditable($("body"));}
+    pendingRange=null;closeModal();save();renderRight();renderReader();toast("Đã lưu thẻ từ");};}
+
+/* reps with editable dates */
+function renderReps(){const box=$("reps");box.innerHTML="";REPS.forEach((d,i)=>{const done=cur.reps&&cur.reps[d];const el=document.createElement("div");el.className="rep"+(done?" done":"");
+  el.innerHTML=`<div class="dot">${d}</div><div class="lab">Lần ${i+1}</div><input class="dt" type="date" value="${done||todayStr()}">`;
+  el.querySelector(".dot").onclick=()=>{cur.reps=cur.reps||{};if(cur.reps[d])delete cur.reps[d];else cur.reps[d]=todayStr();save();renderReps();renderReader();};
+  el.querySelector(".dt").onchange=e=>{cur.reps[d]=e.target.value;save();};
+  el.querySelector(".dt").onclick=e=>e.stopPropagation();
+  box.appendChild(el);});}
+
+/* ---------- editables: input persistence + paste images ---------- */
+$("body").addEventListener("input",()=>{if(cur){cur.body=$("body").innerHTML;saveDebounced();}});
+$("viet").addEventListener("input",()=>{if(cur){cur.viet=$("viet").innerHTML;saveDebounced();}});
+$("ptitle").addEventListener("input",()=>{if(cur){cur.name=$("ptitle").value||"(Không tên)";saveDebounced();renderTree();}});
+$("keypoints").addEventListener("input",()=>{if(cur){cur.keypoints=$("keypoints").innerHTML;saveDebounced();}});
+$("repfree").addEventListener("input",()=>{if(cur){cur.repfree=$("repfree").value;saveDebounced();}});
+$("vsearch").addEventListener("input",renderVocab);
+let sdt;function saveDebounced(){clearTimeout(sdt);sdt=setTimeout(save,400);}
+function persistEditable(el){if(!el)return;el.dispatchEvent(new Event("input",{bubbles:true}));}
+// paste images anywhere in editables (tables paste by default)
+document.addEventListener("paste",e=>{const ed=document.activeElement&&document.activeElement.closest?.('[contenteditable="true"]');if(!ed)return;const items=(e.clipboardData||{}).items||[];for(const it of items){if(it.type&&it.type.indexOf("image")===0){e.preventDefault();const f=it.getAsFile();const r=new FileReader();r.onload=()=>{document.execCommand("insertImage",false,r.result);persistEditable(ed);};r.readAsDataURL(f);return;}}},true);
+
+/* ---------- shared toolbar engine ---------- */
+let activeEditable=null,savedSel=null;
+function trackEd(el){if(el&&el.closest){const ed=el.closest('[contenteditable="true"]');if(ed)activeEditable=ed;}}
+document.addEventListener("focusin",e=>trackEd(e.target));
+document.addEventListener("selectionchange",()=>{const s=window.getSelection();if(s&&s.rangeCount){const r=s.getRangeAt(0);let node=r.startContainer;node=node.nodeType===1?node:node.parentElement;const ed=node&&node.closest?node.closest('[contenteditable="true"]'):null;if(ed){activeEditable=ed;if(!s.isCollapsed)savedSel=r.cloneRange();}}});
+function focusActive(){if(activeEditable){activeEditable.focus();if(savedSel){try{const s=window.getSelection();s.removeAllRanges();s.addRange(savedSel);}catch(e){}}}}
+function applyCmd(cmd,val){if(!activeEditable){toast("Hãy bấm vào vùng cần định dạng trước");return;}focusActive();document.execCommand("styleWithCSS",false,true);document.execCommand(cmd,false,val||null);persistEditable(activeEditable);}
+function applyHl(color){if(!activeEditable)return;focusActive();document.execCommand("styleWithCSS",false,true);document.execCommand("hiliteColor",false,color==="none"?"transparent":color);if(color!=="none")lastHl=color;persistEditable(activeEditable);}
+function applyFc(color){if(!activeEditable)return;focusActive();document.execCommand("styleWithCSS",false,true);document.execCommand("foreColor",false,color);persistEditable(activeEditable);}
+function applyLH(v){if(!activeEditable)return;activeEditable.style.lineHeight=v;if(activeEditable.id==="body"&&cur){cur.bodyLH=v;saveDebounced();}}
+function applySize(dir){if(activeEditable&&activeEditable.id==="body"&&cur){cur.bodyFS=Math.max(13,Math.min(40,(cur.bodyFS||21)+(dir==="up"?2:-2)));$("body").style.fontSize=cur.bodyFS+"px";saveDebounced();return;}focusActive();document.execCommand("styleWithCSS",false,true);document.execCommand("fontSize",false,dir==="up"?"5":"2");persistEditable(activeEditable);}
+function insertImageFile(file){
+  if(!activeEditable){toast("Hãy bấm vào vùng cần chèn ảnh trước");return;}
+  if(!file||!file.type||!file.type.startsWith("image/")){toast("File này không phải ảnh");return;}
+  const r=new FileReader();
+  r.onload=()=>{focusActive();document.execCommand("insertHTML",false,`<img src="${r.result}">`);persistEditable(activeEditable);};
+  r.readAsDataURL(file);
+}
+function insertTable(){
+  if(!activeEditable){toast("Hãy bấm vào vùng cần chèn bảng trước");return;}
+  const rows=Math.max(1,Math.min(20,parseInt(prompt("Số dòng?","3"),10)||0));
+  const cols=Math.max(1,Math.min(10,parseInt(prompt("Số cột?","3"),10)||0));
+  if(!rows||!cols)return;
+  let html="<table>";
+  for(let i=0;i<rows;i++){html+="<tr>";for(let j=0;j<cols;j++)html+="<td>&nbsp;</td>";html+="</tr>";}
+  html+="</table><br>";
+  focusActive();document.execCommand("insertHTML",false,html);persistEditable(activeEditable);
+}
+$("ribbon").addEventListener("mousedown",e=>{if(e.target.closest("[data-cmd],[data-size],#hlBtn,#fcBtn,#lhBtn,#imgBtn,#tblBtn"))e.preventDefault();});
+$("ribbon").addEventListener("click",e=>{const c=e.target.closest("[data-cmd]"),sz=e.target.closest("[data-size]");if(c)applyCmd(c.dataset.cmd);if(sz)applySize(sz.dataset.size);});
+$("imgBtn").onclick=()=>$("imgFile").click();
+$("imgFile").onchange=()=>{const f=$("imgFile").files[0];if(f)insertImageFile(f);$("imgFile").value="";};
+$("tblBtn").onclick=insertTable;
+$("fontPick").onchange=()=>{if($("fontPick").value){applyCmd("fontName",$("fontPick").value);}$("fontPick").selectedIndex=0;};
+$("fsDown").onclick=()=>applySize("down");$("fsUp").onclick=()=>applySize("up");
+
+/* color popover */
+const pop=$("pop");let popMode="hl";
+$("popGrid").innerHTML=PALETTE.map(c=>`<span style="background:${c}" data-c="${c}"></span>`).join("");
+function openPop(btn,mode){popMode=mode;const r=btn.getBoundingClientRect();pop.style.left=Math.min(window.innerWidth-pop.offsetWidth-8,r.left)+"px";pop.style.top=(r.bottom+6)+"px";pop.classList.add("show");$("popNone").style.display=mode==="hl"?"inline-block":"none";}
+$("hlBtn").addEventListener("mousedown",e=>e.preventDefault());
+$("fcBtn").addEventListener("mousedown",e=>e.preventDefault());
+$("lhBtn").addEventListener("mousedown",e=>e.preventDefault());
+$("hlBtn").onclick=()=>openPop($("hlBtn"),"hl");
+$("fcBtn").onclick=()=>openPop($("fcBtn"),"fc");
+$("popGrid").addEventListener("mousedown",e=>e.preventDefault());
+$("popGrid").addEventListener("click",e=>{const s=e.target.closest("[data-c]");if(!s)return;popMode==="hl"?applyHl(s.dataset.c):applyFc(s.dataset.c);pop.classList.remove("show");});
+$("popCustom").onchange=e=>{popMode==="hl"?applyHl(e.target.value):applyFc(e.target.value);pop.classList.remove("show");};
+$("popNone").onclick=()=>{applyHl("none");pop.classList.remove("show");};
+$("lhBtn").onclick=()=>{const r=$("lhBtn").getBoundingClientRect();openSmallMenu(r,[["1.0","1"],["1.3","1.3"],["1.6","1.6"],["2.0","2"],["2.5","2.5"]],applyLH);};
+let smenu;function openSmallMenu(rect,items,cb){if(smenu)smenu.remove();smenu=document.createElement("div");smenu.className="pop show";smenu.style.left=rect.left+"px";smenu.style.top=(rect.bottom+6)+"px";smenu.style.padding="5px";smenu.innerHTML=items.map(it=>`<button class="none" style="display:block;width:100%;margin:2px 0;text-align:left" data-v="${it[1]}">Giãn dòng ${it[0]}</button>`).join("");document.body.appendChild(smenu);smenu.querySelectorAll("[data-v]").forEach(b=>{b.addEventListener("mousedown",e=>e.preventDefault());b.onclick=()=>{cb(b.dataset.v);smenu.remove();smenu=null;};});}
+document.addEventListener("mousedown",e=>{if(!e.target.closest("#pop")&&!e.target.closest("#hlBtn,#fcBtn"))pop.classList.remove("show");if(smenu&&!e.target.closest(".pop")&&!e.target.closest("#lhBtn")){smenu.remove();smenu=null;}});
+
+/* ---------- right-click mini toolbar + save vocab/note from anywhere ---------- */
+const ctx=$("ctx");let pendingRange=null,pendingEditable=null,pendingText="";
+function captureForCtx(){const s=window.getSelection();if(s&&s.rangeCount&&!s.isCollapsed){const r=s.getRangeAt(0);let node=r.startContainer;node=node.nodeType===1?node:node.parentElement;const ed=node&&node.closest?node.closest('[contenteditable="true"]'):null;pendingRange=r.cloneRange();pendingEditable=ed;pendingText=s.toString().trim();activeEditable=ed||activeEditable;savedSel=r.cloneRange();return !!pendingText;}return false;}
+document.addEventListener("contextmenu",e=>{if(captureForCtx()){e.preventDefault();ctx.style.display="flex";const x=Math.min(window.innerWidth-ctx.offsetWidth-8,e.clientX),y=Math.min(window.innerHeight-ctx.offsetHeight-8,e.clientY);ctx.style.left=x+"px";ctx.style.top=y+"px";}else ctx.style.display="none";});
+document.addEventListener("mousedown",e=>{if(!ctx.contains(e.target))ctx.style.display="none";});
+ctx.querySelectorAll("[data-cmd]").forEach(b=>{b.addEventListener("mousedown",e=>e.preventDefault());b.onclick=()=>{applyCmd(b.dataset.cmd);};});
+$("ctxHl").style.background=lastHl;
+$("ctxHl").addEventListener("mousedown",e=>e.preventDefault());
+$("ctxHl").onclick=()=>{ctx.style.display="none";openPop($("ctxHl"),"hl");};
+$("ctxFc").addEventListener("mousedown",e=>e.preventDefault());
+$("ctxFc").onclick=()=>{ctx.style.display="none";openPop($("ctxFc"),"fc");};
+$("ctxVocab").onclick=()=>{ctx.style.display="none";if(!cur){toast("Mở một bài trước");return;}vocabModal(null);};
+$("ctxNote").onclick=()=>{ctx.style.display="none";if(!cur){toast("Mở một bài trước");return;}const quote=pendingText,rg=pendingRange?pendingRange.cloneRange():null,ed=pendingEditable;const id=uid();
+  cur.notes=cur.notes||[];cur.notes.push({id,quote,html:""});if(rg&&ed)wrapSel(rg,"note-mark",id,null,ed);save();renderReader();focusNote(id);};
+
+/* wrap selection (vocab or note) */
+function wrapSel(range,cls,id,bg,ed){try{if(ed&&!ed.contains(range.commonAncestorContainer))return;const span=document.createElement("span");span.className=cls;if(cls==="vw"){span.dataset.vid=id;span.style.background=bg;span.style.fontWeight="700";}else{span.dataset.nid=id;}span.appendChild(range.extractContents());range.insertNode(span);persistEditable(ed||$("body"));}catch(e){}}
+function unwrap(cls,id){const attr=cls==="vw"?"vid":"nid";document.querySelectorAll(`.${cls}[data-${attr}="${id}"]`).forEach(s=>s.replaceWith(document.createTextNode(s.textContent)));persistEditable($("body"));}
+// click saved word / note marker anywhere
+document.addEventListener("click",e=>{const vw=e.target.closest(".vw");if(vw&&vw.dataset.vid){focusCard(vw.dataset.vid);return;}const nm=e.target.closest(".note-mark");if(nm&&nm.dataset.nid)focusNote(nm.dataset.nid);});
+
+/* ---------- top controls / drawers ---------- */
+function applyViet(){const on=!!DB.settings.showViet;$("bodywrap").classList.toggle("split",on);$("vietToggle").classList.toggle("primary",on);$("vietToggle").innerHTML=on?"🇬🇧 Đang dịch":"🇬🇧 EN";}
+$("vietToggle").onclick=()=>{DB.settings.showViet=!DB.settings.showViet;applyViet();save();};
+$("addVocab").onclick=()=>{if(!cur){toast("Mở một bài trước");return;}pendingRange=null;vocabModal(null);};
+function openLeft(){$("leftDrawer").classList.add("open");$("dscrim").classList.add("show");}
+function openRight(){$("rightDrawer").classList.add("open");$("dscrim").classList.add("show");}
+function closeDrawer(){$("leftDrawer").classList.remove("open");$("rightDrawer").classList.remove("open");$("dscrim").classList.remove("show");}
+$("menuBtn").onclick=openLeft;$("openListBtn").onclick=openLeft;$("vocabBtn").onclick=()=>{if(!cur){toast("Mở một bài trước");return;}openRight();renderRight();};
+$("dscrim").onclick=closeDrawer;
+document.querySelectorAll("[data-closedrawer]").forEach(b=>b.onclick=closeDrawer);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeDrawer();ctx.style.display="none";pop.classList.remove("show");if($("scrim").classList.contains("show"))closeModal();}});
+
+/* sidebar tools */
+$("addRoot").onclick=()=>promptModal("Tên thư mục gốc","",v=>{DB.tree.push({id:uid(),type:"folder",name:v,children:[]});commit();});
+$("expandAll").onclick=()=>{const any=allFolders().some(f=>!expanded.has(f.node.id));if(any)allFolders().forEach(f=>expanded.add(f.node.id));else expanded.clear();renderTree();};
+$("connectFile").onclick=connectFile;$("openFile").onclick=openDataFile;
+$("exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(DB,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="han-noi-backup-"+todayStr()+".json";a.click();toast("Đã tải file backup");};
+$("importBtn").onclick=()=>$("importFile").click();
+$("importFile").onchange=e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.tree)throw 0;confirmModal("Nạp backup sẽ THAY THẾ toàn bộ dữ liệu hiện tại. Tiếp tục?",()=>{DB=d;normalize();expanded=new Set();if(DB.tree[0])expanded.add(DB.tree[0].id);DB.sel=null;save();rerenderAll();toast("Đã nạp backup");});}catch(err){toast("File không hợp lệ");}};r.readAsText(file);e.target.value="";};
+
+/* modal/util */
+function openModal(html){$("modalHost").innerHTML=`<div class="modal">${html}</div>`;$("scrim").classList.add("show");$("modalHost").querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);}
+function closeModal(){$("scrim").classList.remove("show");$("modalHost").innerHTML="";}
+$("scrim").addEventListener("mousedown",e=>{if(e.target===$("scrim"))closeModal();});
+function promptModal(t,def,cb,multi){openModal(`<div class="m-head"><h3>${esc(t)}</h3><button class="x" data-close>×</button></div><div class="m-body"><div class="field">${multi?`<textarea id="pmIn" rows="4">${esc(def)}</textarea>`:`<input id="pmIn" value="${esc(def)}">`}</div></div><div class="m-foot"><button class="btn" data-close>Hủy</button><button class="btn primary" id="pmOk">OK</button></div>`);const inp=$("pmIn");inp.focus();inp.select&&inp.select();if(!multi)inp.onkeydown=e=>{if(e.key==="Enter")$("pmOk").click();};$("pmOk").onclick=()=>{const v=inp.value.trim();if(!v){closeModal();return;}cb(v);closeModal();};}
+function confirmModal(msg,cb){openModal(`<div class="m-head"><h3>Xác nhận</h3><button class="x" data-close>×</button></div><div class="m-body" style="font-size:14px;line-height:1.6">${esc(msg)}</div><div class="m-foot"><button class="btn" data-close>Hủy</button><button class="btn primary danger" id="cmOk">Đồng ý</button></div>`);$("cmOk").onclick=()=>{cb();closeModal();};}
+let tdt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(tdt);tdt=setTimeout(()=>t.classList.remove("show"),2200);}
+
+function rerenderAll(){setTab(DB.settings.tab||"vocab");renderTree();if(DB.sel&&findNode(DB.sel)&&findNode(DB.sel).node.type==="passage")openPassage(DB.sel);else showEmpty();}
+
+/* init */
+(async function init(){if(!load()){seed();save();}normalize();
+  applyViet();
+  setTab(DB.settings.tab||"vocab");
+  if(DB.tree[0])expanded.add(DB.tree[0].id);renderTree();
+  if(DB.sel&&findNode(DB.sel)&&findNode(DB.sel).node.type==="passage")openPassage(DB.sel);else showEmpty();
+  try{const h=await loadHandle();if(h&&fsSupported()){$("reconnectPill").style.display="block";$("reconnectPill").onclick=()=>reconnect(h);}}catch(e){}
+})();
+</script>
+</body>
+</html>
